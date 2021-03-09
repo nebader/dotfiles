@@ -49,4 +49,9 @@ alias ld="ls -ld */" # List directories in long format
 # Recursively remove .DS_Store files
 alias cleanupds="find . -type f -name '*.DS_Store' -ls delete"
 
+<<<<<<< HEAD:bash/.bashrc
 
+=======
+# added by Miniconda3 installer
+export PATH="/Users/baderne/miniconda3/bin:$PATH"
+>>>>>>> 60a16c4b0ddc26a8c9b8050e2570fbc11cae3cb7:bashrc
