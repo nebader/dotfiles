@@ -1,0 +1,38 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/nbader/Dropbox/backup/" . "Documents/")
+ ("/Users/nbader/Dropbox/" . "backup/")
+ ("/Users/nbader/" . "Dropbox/")
+ ("/Users/" . "nbader/")
+ ("/" . "Users/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/nbader/Dropbox/backup/Documents/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ 
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/nbader/Dropbox/backup/Documents/" (24606 54706 800751 385000) "gis/" "kids/" "computer/" "Papers2/" "MuseScore3/" "Papers3/" "Civilization IV/" ".parallels-vm-directory/" "Joy/" "Zoom/" "teaching/" "local/" "ToDo/" "Microsoft User Data/" "Late2020projects.pdf" "etc/" "BioWare/" "SEM_loess/" "whitmanmisc/" "Civilization IV Beyond the Sword/" ".localized" "archive/" "jobapplications/" "Aspyr/" ".DS_Store" "TempPdfs/" "music/" "research/" "../" "./")
+
+ ("/Users/nbader/Dropbox/backup/" (23940 19551 263486 444000) "Google Earth/" "Documents/" "Scripts/" "Sites/" "texmf/" "pictures/" ".DS_Store" "../" "./")
+
+ ("/Users/nbader/Dropbox/" (24555 33833 205996 907000) "MBaderPbTest.xls" "photomicroscopy/" "IMG_7039.JPG" "Passwords app.dbx-passwords" "WorkImacDesktop/" "WWU_2018.zip" "Apps/" "backup/" "7800-series-qsg.pdf" "FudgeDice.xlsx" ".dropbox.cache/" "CheckOnPC/" "Refdocs/" "LabsForPride/" "PDFs/" "JaneEye/" "MBaderPbTest.xlsx" "WWU_2018/" "IMG_8035.JPG" "stomp/" "WWU_2017_J15.zip" "GrantSongs/" "Amy/" ".dropbox" "Public/" "IMG_7048.JPG" "Camera Uploads/" "NickBioForBob.JPG" "IMG_4581.jpg" "IceHarborTouchet.pdf" "Bailey1990.pdf" "IMG_4980.jpg" "Shared/" "1802 TomSkeenParty-Video3.GL_0784.MOV" "GrandeRonde.kmz" ".Papers3.syncsettings" "GeoSeniors (1).xlsx" "SarahJaneLastDayBerney13June.JPG" "BaderPhoto2015.jpg" "SaishaThesisFinal_NB.docx" "KitchenaidGearReplacement.txt" "HurricaneCkTopo.pdf" "1802 TomSkeenParty-Video1.GL_0775.MOV" "IceHarborDam.pdf" "Ricardo's Master's Project/" "vim4.png" "TranferFrOrthoceras/" "GeoTech18Applicants/" "SEM_EDS_Data/" "PhotosToProcess/" "Vault.dbx-vault" "vim5.png" "GeoCourses - SinceF11.pdf" "cart.pdf" "Icon" "ForMatt/" "schema.ini" "vim7.png" ".DS_Store" "OnSong/" "vim6.png" "vim2.png" "Computer backup.dbx-backup" "New folder/" "SarahPics/" "vim3.png" "PrintForTrip/" "DEAL_WITH_THIS_STUFF/" "vim1.png" "PhotoManagementWork/" "Amazon.com - Order 111-9256817-1990618.pdf" "steamboat_rock.jpg" "IMG955050.jpg" "ofr94_03_plt1.pdf" "Amazon.com - Order 111-1441167-2061037.pdf" "../" "./")
+
+ ("/Users/nbader/Documents/" (24567 37449 879797 857000) "Zoom/" "Paradox Interactive/" ".localized" ".DS_Store" "../" "./")
+
+ ("/Users/nbader/" (24624 21860 24645 863000) "miniconda3/" ".conda/" ".viminfo" ".bash_history" ".lilypond-fonts.cache-2/" ".gitconfig" ".cache/" ".python_history" "Downloads/" ".Xauthority" ".bash_profile" ".spacemacs" ".rstudio-desktop/" ".swn" ".spacemacs.env" "Documents/" ".swo" ".jupyter/" "test.txt" ".Trash/" "Dropbox/" "Applications/" ".emacs" ".vimrc" "Movies/" "roster.txt" "emacs.d/" "Scripts/" ".bash_profile-miniconda3.bak" ".idlerc/" ".dropbox/" "Public/" "Google Drive/" ".bash_sessions/" "Sites/" ".emacs.d/" "seaborn-data/" "Zotero/" ".oracle_jre_usage/" ".lesshst" ".matplotlib/" "Library/" "Desktop/" ".ipython/" ".zsh_history" ".rnd" "Pictures/" ".local/" ".swp" ".zshrc" ".bashrc" ".subversion/" ".wget-hsts" ".CFUserTextEncoding" "sioseis/" "dotfiles/" ".DS_Store" ".vim/" ".condarc" "Music/" ".config/" ".Rhistory" "../" "./")
+
+ ("/Users/" (24270 63525 0 0) "Guest/" "nbader/" "Shared/" ".localized" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
