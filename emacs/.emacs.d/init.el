@@ -4,10 +4,21 @@
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/") t)
 
+;; Housecleaning
 
 ;; Have Customize write its stuff to another file,
 (setq custom-file "~/.emacs.d/custom-file.el")
 (load custom-file)
+
+;; Keep backup files (file~) out of my directories
+(setq backup-directory-alist
+        '(("." . "~/.saves" )) ; Put all backups in .saves
+      backup-by-copying t      ; don't mess up symlinks
+      delete-old-versions t    ; don't let old versions pile up
+      kept-new-versions 6      
+      kept-old-versions 2
+      version-control t)       ; use versioned backups
+
 
 
 ;; ――――――――――――――――――――――――――――――――― Use better defaults ―――――――――――――――――――――――――――――――

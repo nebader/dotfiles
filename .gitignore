@@ -1,2 +1,13 @@
+# Comments only at the beginning of a line; don't append
+# Paths with slashes are relative to the location of this file
+# Trailing slash mathces everything inside that directory
+# Names without spaces are ignored anywhere in the tree
+
 .DS_Store
 .stow-local-ignore
+
+# Emacs directory (should be redundant if Stow is set properly)
+emacs/.emacs.d/auto-save-list/
+emacs/.emacs.d/backups/
+emacs/.emacs.d/elpa/
+emacs/.emacs.d/ido.last

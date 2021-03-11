@@ -3,7 +3,19 @@
 export PATH="/usr/local/sbin:$PATH"
 export PATH=$PATH:~/Scripts
 
-# From here down is oh-my-zsh template
+###########
+# Aliases #
+###########
+
+alias vi="nvim"
+alias vim="nvim"
+alias ld="ls -ld */" # List directories in long format
+# Recursively remove .DS_Store files
+alias cleanupds="find . -type f -name '*.DS_Store' -ls delete"
+
+########################################
+# From here down is oh-my-zsh template #
+########################################
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
