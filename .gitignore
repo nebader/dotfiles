@@ -1,13 +1,32 @@
-# Comments only at the beginning of a line; don't append
-# Paths with slashes are relative to the location of this file
-# Trailing slash mathces everything inside that directory
+# Comments only at go at the beginning of a line; don't append
+# Paths with slashes are relative to the location of this ignore file
+# Trailing slash matches everything inside that directory
 # Names without spaces are ignored anywhere in the tree
+# ! reverses a selection
 
-.DS_Store
-.stow-local-ignore
+# Start by ignoring everything by default
+*
 
-# Emacs directory (should be redundant if Stow is set properly)
-emacs/.emacs.d/auto-save-list/
-emacs/.emacs.d/backups/
-emacs/.emacs.d/elpa/
-emacs/.emacs.d/ido.last
+# The rest of this file will add back things we want to track
+
+# Track directories, so we can recurse into them
+!*/
+
+# Track these Git files
+!.gitignore
+!README.md
+!LICENSE.md
+
+# Z Shell
+!zsh/.zshrc
+
+# Vi
+!.nvim/config/nvim/init.vim
+
+# Emacs
+!emacs/.emacs.d/init.el
+!emacs/.emacs.d/custom-file.el
+
+# Karabiner
+!karabiner/.config/karabiner/karabiner.json
+!karabiner/.config/karabiner/assets/
