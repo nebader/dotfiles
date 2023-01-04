@@ -30,3 +30,7 @@
 # Karabiner
 !karabiner/.config/karabiner/karabiner.json
 !karabiner/.config/karabiner/assets/
+
+# iTerm2
+!iterm2/com.googlecode.iterm2.plist
+
