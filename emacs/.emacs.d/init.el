@@ -11,9 +11,9 @@
 (require 'package)
 
 ; Change package.el 'archives' variable to add additional repositories
-(setq package-archives '( 
+(setq package-archives '(
+	("gnu" . "https://elpa.gnu.org/packages/")
 	("melpa" . "https://melpa.org/packages/")
-        ("elpa" . "https://elpa.gnu.org/packages")
         ))
 
 ; Tell package.el to load packages in its load list
@@ -79,8 +79,15 @@
 ;;     :map evil-normal-state-map("gc" . evil-commentary))
 ;;   )
 
+; git interface
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit))
+  )
+
 ; R interface
-(use-package ess)
+(use-package ess
+  :ensure t)
 
 ; LaTeX interface
 (use-package latex
@@ -133,8 +140,9 @@
 
 ;; On Mac, make sure that option is meta, not command (I switched keys globally)
 (when (eq system-type 'darwin)
-  (setq mac-option-modifier 'meta
-	mac-command-modifier 'nil))
+  (setq mac-command-key-is-meta t))
+;  (setq mac-option-modifier 'meta
+;	mac-command-modifier 'nil))
 ;	mac-option-modifier 'meta
 ;        mac-right-option-modifier 'nil
 ;	mac-command-modifier 'nil
