@@ -23,9 +23,8 @@
 # Vi
 !.nvim/config/nvim/init.vim
 
-# Emacs
-!emacs/.emacs.d/init.el
-!emacs/.emacs.d/custom-file.el
+# Emacs: only the org file.  Other files should be handled by the computer
+!emacs/emacs-config.org
 
 # Karabiner
 !karabiner/.config/karabiner/karabiner.json
