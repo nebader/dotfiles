@@ -1,13 +1,55 @@
 #+TITLE: Emacs configuration file
 #+PROPERTY: header-args:emacs-lisp :tangle ./.emacs.d/init.el :mkdirp yes
 
-* TODO  this org file should be handled by dropbox and version controlled; init.el will be local and is removed from git and dropbox
+* TODO ensure that this file tangles on save
 
-* TODO figure out how to refresh after changes; post instructions here
+* TODO remove other emacs init files from dotfiles, and from git tracking.  Emacs isn't using them, it is writing to .emacs.d, not a link.  Push these changes.
+
+* TODO on startup, check whether the dotfiles repo is out of date with origin master, add little instruction message for magit about how to pull them down and whether to restart.  Tricky because not starting in dotfiles directory
 
 * TODO find out how tabs and spaces are handled, fix if necessary
 
-* TODO set some keybindings.  M-o other window, and C-z (letter) for my own
+* TODO check out Thing At Point Commands
+
+* This file handles all emacs configuration.
+
+- Emacs doesn't "know about" this file on its own.  Instead, the code blocks in this file "tangle" (write out) to ~.emacs.d/init.el~ which emacs can find.  (See the property attribute at the top of this file.)
+- The ~init.el~ and other init files are handled by emacs so those files should not be edited by humans., or tracked by the git repo.
+
+** After making a change to this file:
+
+1. You can activate the change right now to test it.  To do this,  ~C-c C-c~ on the code block to evaluate it.  (Thus, a best practice is to keep code for stuff you'll work on as a unit  separated into its own block.)
+
+2. Saving this document re-tangles the ~init.el~ file, so it will be ready to go next time.  This is set later in this config file.
+   
+3. Commit any changes to the git repository via magit.  Here is the quickest way:
+   1. Open a status buffer with ~C-x g~
+   2. Navigate to the file, Tab to unfurl and see changes, ~s~ to stage a file for commit.  (Staging is really only useful when your single update is split across multiple files, but do it anyway.)
+   3. To commit all staged files use ~c~, type your message and ~C-c C-c~ to commit.
+   4. Push to origin master with ~P~
+
+You should use the magit step to track changes to any dotfiles, not just emacs.
+
+** When  are out of date compared to the repo:
+
+Fetch changes with ~F~ in a magit buffer.
+
+** Organization of configuration steps in this file
+
+There is no "correct" order for setting customizations in this file.  One user suggests:
+
+    Add paths so emacs can find things
+
+    Configure emacs-OS interactions
+
+    Configure built-in emacs features
+
+    Configure packages that extend/override emacs features (minibuffer, completion, tabs, etc.)
+
+    Configure other packages
+
+    Never load themes, I have never had good luck with them in init/configuration and I load mine manually.
+
 
 * Package management
 
@@ -31,9 +73,10 @@ This is par for the emacs course but a bit of a mess.
   ; Only update list of available packages if the list doesn't exist (new install)
   (unless package-archive-contents ; evals to TRUE if list exists
     package-refresh-contents)
+  
   ; Current problem: if you installed emacs a while ago, then try to install a package,
   ; use-package will "fail to install" because the list is outdated.  You can run
-  ; M-x package-refresh-contents manually if you see this error message.
+  ; "M-x package-refresh-contents" manually if you see this error message.
   ; In the long term, moving to straight.el might be the way to fix this.
 
   ;; Bootstrap use-package, a package that changes the way that packages
@@ -176,6 +219,22 @@ Great commands needing a binding:
 
 #+end_src
 
+* General Emacs behavior from external packages
+
+The unfill package provides the reverse of the fill commands to convert hard-wrapped lines to long lines.  Provides:
+- M-x unfill-region
+- M-x unfill-paragraph
+- M-x unfill-toggle
+
+#+begin_src emacs-lisp
+
+    (use-package unfill
+      :ensure t)
+
+#+end_src
+
+#+RESULTS:
+
 * Org mode
 
 ** Unsorted
@@ -271,7 +330,7 @@ Our goal is that every time this file is edited and saved, we will automatically
 
     ;; Thanks to David Wilson at System Crafters for this function
     (defun nb/org-babel-tangle-config ()
-      ;; First check to make sure 
+      ;; First check to make sure that we're editing this config file
       (when (string-equal (buffer-file-name)
                           (expand-file-name "~/dotfiles/emacs/.emacs.d/emacs-config.org"))
         (let ((org-confirm-babel-evaluate nil))
@@ -553,7 +612,6 @@ Two big commands are
 
       ;; remap M-o (unbound) to other-window
       (global-set-key (kbd "M-o") 'other-window)
-
 
       ;; On Mac, make sure that command is meta
       (when (eq system-type 'darwin)
