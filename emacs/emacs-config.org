@@ -1,26 +1,34 @@
 #+TITLE: Emacs configuration file
-#+PROPERTY: header-args:emacs-lisp :tangle ./.emacs.d/init.el :mkdirp yes
+#+PROPERTY: header-args :tangle ~/.emacs.d/init.el :mkdirp yes :results silent
 
-* TODO ensure that this file tangles on save
+* TODO Work machine: delete links at .emacs.d and dotfiles.  Dotfiles/emacs should have only this file.  Bring down git repo first
 
-* TODO remove other emacs init files from dotfiles, and from git tracking.  Emacs isn't using them, it is writing to .emacs.d, not a link.  Push these changes.
-
-* TODO on startup, check whether the dotfiles repo is out of date with origin master, add little instruction message for magit about how to pull them down and whether to restart.  Tricky because not starting in dotfiles directory
-
-* TODO find out how tabs and spaces are handled, fix if necessary
+* TODO set so code blocks don't have a return block in this document. :results silent works in a code block
 
 * TODO check out Thing At Point Commands
+
+* TODO currently, in Terminal running ~emacs somefile.txt~ hangs the Terminal.  Maybe opens emacs in Terminal mode but I'm not sure.  Both of these need fixin'.  Maybe proper aliases in .zshrc?
 
 * This file handles all emacs configuration.
 
 - Emacs doesn't "know about" this file on its own.  Instead, the code blocks in this file "tangle" (write out) to ~.emacs.d/init.el~ which emacs can find.  (See the property attribute at the top of this file.)
-- The ~init.el~ and other init files are handled by emacs so those files should not be edited by humans., or tracked by the git repo.
+- On a new install, you'll have to bootstrap this process by running =M-x org-babel-tangle= .  This should create the ~init.el~ file.
+- The ~init.el~ and other init files are handled by emacs so those files should not be edited by humans, nor tracked by the git repo.
+
+  Put a comment at the top of ~init.el~ just to make sure that no one tries to edit it:
+
+  #+begin_src emacs-lisp
+
+    ;; This is an automatically generated file.  Don't try to edit this file directly.
+    ;; The editable config file lives at ~/dotfiles/emacs/emacs_config.org
+    
+  #+end_src
 
 ** After making a change to this file:
 
-1. You can activate the change right now to test it.  To do this,  ~C-c C-c~ on the code block to evaluate it.  (Thus, a best practice is to keep code for stuff you'll work on as a unit  separated into its own block.)
+1. You can activate the change immediately to test it.  To do this,  ~C-c C-c~ on the code block to evaluate it.  (Thus, a best practice is to keep code for stuff you'll work on as a unit  separated into its own block.)
 
-2. Saving this document re-tangles the ~init.el~ file, so it will be ready to go next time.  This is set later in this config file.
+2. Saving this document re-tangles the ~init.el~ file, so it will be ready to go next time.  This behavior is set later in this config file.
    
 3. Commit any changes to the git repository via magit.  Here is the quickest way:
    1. Open a status buffer with ~C-x g~
@@ -33,6 +41,8 @@ You should use the magit step to track changes to any dotfiles, not just emacs.
 ** When  are out of date compared to the repo:
 
 Fetch changes with ~F~ in a magit buffer.
+
+*** TODO on startup, check whether the dotfiles repo is out of date with origin master, add little instruction message for magit about how to pull them down and whether to restart.  Tricky because not starting in dotfiles directory
 
 ** Organization of configuration steps in this file
 
@@ -53,7 +63,11 @@ There is no "correct" order for setting customizations in this file.  One user s
 
 * Package management
 
-This is par for the emacs course but a bit of a mess.
+Keep this section at the beginning.
+
+We use the built in package manager "package.el" just once, in this code block, to install the package "use-package" which is a nicer way of configuring packages.
+
+Current problem: sometimes when you try to install a package, use-package will "fail to install" because the list is outdated.  You can run "M-x package-refresh-contents" manually if you see this error message.
 
 #+begin_src emacs-lisp
 
@@ -73,11 +87,6 @@ This is par for the emacs course but a bit of a mess.
   ; Only update list of available packages if the list doesn't exist (new install)
   (unless package-archive-contents ; evals to TRUE if list exists
     package-refresh-contents)
-  
-  ; Current problem: if you installed emacs a while ago, then try to install a package,
-  ; use-package will "fail to install" because the list is outdated.  You can run
-  ; "M-x package-refresh-contents" manually if you see this error message.
-  ; In the long term, moving to straight.el might be the way to fix this.
 
   ;; Bootstrap use-package, a package that changes the way that packages
   ;; are specified and loaded, and enables lazy loading
@@ -89,9 +98,53 @@ This is par for the emacs course but a bit of a mess.
 
 #+end_src
 
+* Tell emacs where stuff is
+
+** System path
+
+Sometimes things that work from the command line don't run from inside emacs, because emacs may have the wrong system path, especially on Mac OS.  This package attempts to set exec-path and PATH from the the shell path.  Works if your shell is found by ~(getenv "SHELL")~ .  This section is right after the package manager configuration in case later config options need emacs to know the system path.
+
+#+begin_src emacs-lisp
+
+  (use-package exec-path-from-shell
+    :if (memq window-system '(mac ns x)) ; when window mgr is either mac, ns, or x
+    :config
+    (exec-path-from-shell-initialize))
+  
+#+end_src
+
+** Emacs files and directories
+
+Here we control how emacs writes things to files, so that it doesn't get too messy.
+
+First, tell Customize to write its customization settings to another file, not init.el.  Strictly speaking I shouldn't care because I won't edit init.el myself, but all the same I would rather keep things tidy.
+
+On a new install I may need to touch custom-file.el for this to run.
+
+#+begin_src emacs-lisp
+
+  (setq custom-file "~/.emacs.d/custom-file.el")
+  (load custom-file)
+
+#+end_src
+
+Emacs makes a big mess of my directories by writing backup files all over the place (they look like "somefile~").  Instead let's keep them all in .emacs.d with everything else emacs manages.
+
+#+begin_src emacs-lisp
+
+  (setq backup-directory-alist
+          '(("." . "~/.emacs.d/saves" )) ; Put all backups in .saves
+        backup-by-copying t      ; don't mess up symlinks
+        delete-old-versions t    ; don't let old versions pile up
+        kept-new-versions 6      
+        kept-old-versions 2
+        version-control t)       ; use versioned backups
+
+#+end_src
+
 * General Emacs UI
 
-Simplify the emacs UI
+** Simplify the emacs UI
 
 #+begin_src emacs-lisp
 
@@ -111,7 +164,7 @@ Simplify the emacs UI
 
 This section needs to precede Org, since Org invokes these fonts.
 
-Note: on a new install you'll need to run the following interactively in a lisp environment or else some fonts won't be installed:
+Note: on a new install you'll need to run the following interactively or else some fonts won't be installed:
 M-x all-the-icons-install-fonts
 (use-package all-the-icons)
 
@@ -139,11 +192,11 @@ I like doom-tomorrow-day for a light screen.  There is also a doom-tomorrow-nigh
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
           doom-themes-enable-italic t) ; if nil, italics is universally disabled
     (load-theme 'doom-tomorrow-day t)
-    ;; Enable flashing mode-line on errors
+    ;; Enable flashing mode-line on errors, replacing beep:
     (doom-themes-visual-bell-config)
-    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    ;; Enable custom neotree theme (all-the-icons must be installed!):
     (doom-themes-neotree-config)
-    ;; or for treemacs users
+    ;; or for treemacs users:
     (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
     (doom-themes-treemacs-config)
     ;; Corrects (and improves) org-mode's native fontification.
@@ -174,10 +227,18 @@ I am currently just using the Doom default.  This requires all-the-icons I belie
   ;; Automatically update buffers if file content on the disk has changed.
   (setq global-auto-revert-mode t)
 
-  ;; matching pairs of brackets/parens/etc. are colored the same
-  ;; essential for elisp, I think
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+#+RESULTS:
+| rainbow-delimiters-mode |
+
+** Indentation
+
+Make sure that hitting the Tab key inserts spaces, not tabs.   (You can clean up an existing file with ~M-x untabify~.)
+
+#+begin_src emacs-lisp
+
+  (setq-default indent-tabs-mode nil)
 
 #+end_src
 
@@ -201,6 +262,7 @@ I am currently just using the Doom default.  This requires all-the-icons I belie
   
 #+end_src
 
+
 ** Dired configuration
 
 Great commands needing a binding:
@@ -219,6 +281,7 @@ Great commands needing a binding:
 
 #+end_src
 
+
 * General Emacs behavior from external packages
 
 The unfill package provides the reverse of the fill commands to convert hard-wrapped lines to long lines.  Provides:
@@ -233,7 +296,6 @@ The unfill package provides the reverse of the fill commands to convert hard-wra
 
 #+end_src
 
-#+RESULTS:
 
 * Org mode
 
@@ -320,6 +382,7 @@ The unfill package provides the reverse of the fill commands to convert hard-wra
 
 #+end_src
 
+
 ** Auto-generate init.el
 
 Our goal is that every time this file is edited and saved, we will automatically run org-babel-tangle to regenerate our init.el file.  However, if we have multiple org buffers open, we don't want to run it when we save those buffers - we just want it for this buffer.
@@ -332,7 +395,7 @@ Our goal is that every time this file is edited and saved, we will automatically
     (defun nb/org-babel-tangle-config ()
       ;; First check to make sure that we're editing this config file
       (when (string-equal (buffer-file-name)
-                          (expand-file-name "~/dotfiles/emacs/.emacs.d/emacs-config.org"))
+                          (expand-file-name "~/dotfiles/emacs/emacs-config.org"))
         (let ((org-confirm-babel-evaluate nil))
           (org-babel-tangle))))
   ;; Org startup hook adds an after-save hook
@@ -342,6 +405,7 @@ Our goal is that every time this file is edited and saved, we will automatically
   "/Users/nbader/dotfiles/emacs/.emacs.d/emacs-config.org"
 
 #+end_src
+
 
 ** Babel languages
 
@@ -358,6 +422,7 @@ Our goal is that every time this file is edited and saved, we will automatically
       ))
 
 #+end_src
+
 
 * Development
 
@@ -380,6 +445,19 @@ Before using a new language, you have to install the LSP server for the language
 
 #+end_src
 
+*** General program mode changes
+
+Parentheses!
+
+#+begin_src emacs-lisp
+
+  ;; matching pairs of brackets/parens/etc. are colored the same
+  ;; essential for elisp, I think
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+
 *** Typescript (Javascript)
 
 Typescript is basically Javascript but strongly typed, to help you catch errors early.  It outputs to regular Javascript.  This implementation is just me following along with using lsp mode for arbitrary languages in David Wilson's Emacs From Scratch series.
@@ -392,6 +470,7 @@ Typescript is basically Javascript but strongly typed, to help you catch errors 
     :config (setq typescript-indent-level 2))
   
 #+end_src
+
 
 *** Company mode
 
@@ -420,6 +499,7 @@ Two big commands are
   
 #+end_src
 
+
 ** Magit
 
 #+begin_src emacs-lisp
@@ -435,6 +515,7 @@ Two big commands are
 
 #+end_src
 
+
 * R environment
 
 #+begin_src emacs-lisp
@@ -442,6 +523,7 @@ Two big commands are
   (use-package ess)
 
 #+end_src
+
 
 * LaTeX environment
 
@@ -454,6 +536,7 @@ Two big commands are
   
 #+end_src
 
+
 * Python
 
 #+begin_src emacs-lisp
@@ -463,18 +546,10 @@ Two big commands are
 
 #+end_src
 
+
 * Shell stuff
 
-#+begin_src emacs-lisp
-
-  ; This package attempts to set emacs exec-path and PATH from the shell path
-  ; Should work if your shell is found by executing (getenv "SHELL")
-  (use-package exec-path-from-shell
-    :if (memq window-system '(mac ns x)) ; when window mgr is either mac, ns, or x
-    :config
-    (exec-path-from-shell-initialize))
-  
-#+end_src
+MOVED!
 
 * Completion framework
 
@@ -617,11 +692,11 @@ Two big commands are
       (when (eq system-type 'darwin)
         (setq mac-command-key-is-meta t))
       ;  (setq mac-option-modifier 'meta
-      ;	mac-command-modifier 'nil))
-      ;	mac-option-modifier 'meta
+      ; mac-command-modifier 'nil))
+      ; mac-option-modifier 'meta
       ;        mac-right-option-modifier 'nil
-      ;	mac-command-modifier 'nil
-      ;	mac-right-command-modifier 'meta))
+      ; mac-command-modifier 'nil
+      ; mac-right-command-modifier 'meta))
 
       ; On Mac, command-h bypasses emacs to hide the window.  Prevent emacs from sending this
       ; command-tab still works as macos app switcher!
@@ -639,28 +714,6 @@ Two big commands are
        save-interprogram-paste-before-kill t
       )
 
-#+end_src
-
-* Emacs files and directories
-
-This section is about basic housecleaning.
-
-#+begin_src emacs-lisp
-
-  ;; Have Customize write its customization settings to another file.
-  ;; But do I need this anymore?
-  (setq custom-file "~/.emacs.d/custom-file.el")
-  (load custom-file)
-
-  ;; Keep backup files (file~) out of my directories
-  (setq backup-directory-alist
-          '(("." . "~/.saves" )) ; Put all backups in .saves
-        backup-by-copying t      ; don't mess up symlinks
-        delete-old-versions t    ; don't let old versions pile up
-        kept-new-versions 6      
-        kept-old-versions 2
-        version-control t)       ; use versioned backups
-  
 #+end_src
 
 * Evil mode stuff, not currently used
